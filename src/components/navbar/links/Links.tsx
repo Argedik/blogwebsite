@@ -3,6 +3,8 @@
 import NavLink from './navLink/navLink';
 import React, { useState } from 'react';
 import styles from './links.module.css';
+import Image from 'next/image';
+import { handleLogout } from '@/lib/action';
 
 const links = [
 	{
@@ -26,13 +28,17 @@ const links = [
 interface Session {
 	user?: {
 		isAdmin: boolean;
+		session: boolean;
 	};
 }
-interface LinksProps {
-	session?: Session;
-}
+// interface LinksProps {
+// 	session?: Session;
+// }
 
-const Links: React.FC<LinksProps> = ({ session }) => {
+const session = true;
+const isAdmin = true;
+
+const Links: React.FC<Session> = ({ session }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -41,12 +47,10 @@ const Links: React.FC<LinksProps> = ({ session }) => {
 				{links.map((link) => (
 					<NavLink item={link} key={link.title} />
 				))}
-				{session?.user ? (
+				{session ? (
 					<>
-						{session.user?.isAdmin && (
-							<NavLink item={{ title: 'Admin', path: '/admin' }} />
-						)}
-						<form>
+						{isAdmin && <NavLink item={{ title: 'Admin', path: '/admin' }} />}
+						<form action={handleLogout}>
 							<button className={styles.logout}>Logout</button>
 						</form>
 					</>
@@ -54,12 +58,14 @@ const Links: React.FC<LinksProps> = ({ session }) => {
 					<NavLink item={{ title: 'Login', path: '/login' }} />
 				)}
 			</div>
-			<button
+			<Image
 				className={styles.menuButton}
+				src="/menu.png"
+				alt=""
+				width={30}
+				height={30}
 				onClick={() => setOpen((prev) => !prev)}
-			>
-				Menu
-			</button>
+			/>
 			{open && (
 				<div className={styles.mobileLinks}>
 					{links.map((link) => (
