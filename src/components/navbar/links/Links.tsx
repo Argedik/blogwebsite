@@ -25,12 +25,12 @@ const links = [
 	},
 ];
 
-interface Session {
-	user?: {
-		isAdmin: boolean;
-		session: boolean;
-	};
-}
+// interface Session {
+// 	user?: {
+// 		isAdmin: boolean;
+// 		session: boolean | null;
+// 	};
+// }
 // interface LinksProps {
 // 	session?: Session;
 // }
@@ -38,7 +38,14 @@ interface Session {
 const session = true;
 const isAdmin = true;
 
-const Links: React.FC<Session> = ({ session }) => {
+interface Session {
+	session: boolean;
+}
+interface LinksProps {
+	session: Session | null;
+}
+
+const Links: React.FC<LinksProps> = ({ session }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
