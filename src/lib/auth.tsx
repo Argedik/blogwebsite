@@ -3,10 +3,16 @@ import GitHub from 'next-auth/providers/github';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { connectToDb } from './utils';
 import { User } from './models';
-import bcrypt from 'bcryptjs';
+const bcrypt = require('bcrypt');
 import { authConfig } from './auth.config';
+// import bcrypt from 'bcryptjs';
 
-const login = async (credentials) => {
+interface Credentials {
+	username: string;
+	password: string;
+}
+
+const login = async (credentials: Credentials) => {
 	try {
 		connectToDb();
 		const user = await User.findOne({ username: credentials.username });
@@ -42,8 +48,19 @@ export const {
 		CredentialsProvider({
 			async authorize(credentials) {
 				try {
-					const user = await login(credentials);
-					return user;
+					if (
+						typeof credentials?.username === 'string' &&
+						typeof credentials?.password === 'string'
+					) {
+						// Yeni Credentials nesnesi oluştur
+						const validCredentials: Credentials = {
+							username: credentials.username,
+							password: credentials.password,
+						};
+						const user = await login(validCredentials);
+						return user;
+					}
+					throw new Error('Invalid credentials');
 				} catch (err) {
 					return null;
 				}
@@ -51,17 +68,17 @@ export const {
 		}),
 	],
 	callbacks: {
-		async signIn({ user, account, profile }) {
-			if (account.provider === 'github') {
+		async signIn({ account, profile }) {
+			if (account?.provider === 'github') {
 				connectToDb();
 				try {
-					const user = await User.findOne({ email: profile.email });
+					const user = await User.findOne({ email: profile?.email });
 
 					if (!user) {
 						const newUser = new User({
-							username: profile.login,
-							email: profile.email,
-							image: profile.avatar_url,
+							username: profile?.login,
+							email: profile?.email,
+							image: profile?.avatar_url,
 						});
 
 						await newUser.save();

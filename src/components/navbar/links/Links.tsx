@@ -1,8 +1,8 @@
 'use client';
 
-import NavLink from './navLink/navLink';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './links.module.css';
+import NavLink from './navLink/navLink';
 import Image from 'next/image';
 import { handleLogout } from '@/lib/action';
 
@@ -25,28 +25,12 @@ const links = [
 	},
 ];
 
-// interface Session {
-// 	user?: {
-// 		isAdmin: boolean;
-// 		session: boolean | null;
-// 	};
-// }
-// interface LinksProps {
-// 	session?: Session;
-// }
-
-const session = true;
-const isAdmin = true;
-
-interface Session {
-	session: boolean;
-}
-interface LinksProps {
-	session: Session | null;
-}
-
-const Links: React.FC<LinksProps> = ({ session }) => {
+const Links = ({ session }) => {
 	const [open, setOpen] = useState(false);
+
+	// TEMPORARY
+	// const session = true;
+	// const isAdmin = true;
 
 	return (
 		<div className={styles.container}>
@@ -54,9 +38,11 @@ const Links: React.FC<LinksProps> = ({ session }) => {
 				{links.map((link) => (
 					<NavLink item={link} key={link.title} />
 				))}
-				{session ? (
+				{session?.user ? (
 					<>
-						{isAdmin && <NavLink item={{ title: 'Admin', path: '/admin' }} />}
+						{session.user?.isAdmin && (
+							<NavLink item={{ title: 'Admin', path: '/admin' }} />
+						)}
 						<form action={handleLogout}>
 							<button className={styles.logout}>Logout</button>
 						</form>

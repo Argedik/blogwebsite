@@ -4,15 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { Post, User } from './models';
 import { connectToDb } from './utils';
 import { signIn, signOut } from './auth';
-import bcrypt from 'bcryptjs';
-
-interface PostFormData {
-	title: string;
-	desc: string;
-	slug: string;
-	userId: string;
-}
-
+// import bcrypt from 'bcryptjs';
+const bcrypt = require('bcrypt');
 export const addPost = async (prevState, formData: FormData) => {
 	// const title = formData.get("title");
 	// const desc = formData.get("desc");
