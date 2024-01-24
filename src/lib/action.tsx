@@ -146,6 +146,7 @@ export const login = async (_prevState: any, formData: FormData) => {
 				return { error: 'Invalid username or password' };
 			}
 		} else {
+			// `err` bir `Error` nesnesi değilse, farklı bir şekilde ele alınabilir.
 			console.log('An unexpected error occurred:', err);
 		}
 		throw err;
