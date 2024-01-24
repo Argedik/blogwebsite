@@ -6,7 +6,7 @@ import { connectToDb } from './utils';
 import { signIn, signOut } from './auth';
 // import bcrypt from 'bcryptjs';
 const bcrypt = require('bcrypt');
-export const addPost = async (prevState, formData: FormData) => {
+export const addPost = async (_prevState: any, formData: FormData) => {
 	// const title = formData.get("title");
 	// const desc = formData.get("desc");
 	// const slug = formData.get("slug");
@@ -47,7 +47,7 @@ export const deletePost = async (formData: FormData) => {
 	}
 };
 
-export const addUser = async (prevState, formData: FormData) => {
+export const addUser = async (_prevState: any, formData: FormData) => {
 	const { username, email, password, img } = Object.fromEntries(formData);
 
 	try {
@@ -94,7 +94,7 @@ export const handleLogout = async () => {
 	await signOut();
 };
 
-export const register = async (previousState, formData: FormData) => {
+export const register = async (_prevState: any, formData: FormData) => {
 	const { username, email, password, img, passwordRepeat } =
 		Object.fromEntries(formData);
 
@@ -131,7 +131,7 @@ export const register = async (previousState, formData: FormData) => {
 	}
 };
 
-export const login = async (prevState, formData: FormData) => {
+export const login = async (_prevState: any, formData: FormData) => {
 	const { username, password } = Object.fromEntries(formData);
 
 	try {
@@ -139,8 +139,15 @@ export const login = async (prevState, formData: FormData) => {
 	} catch (err) {
 		console.log(err);
 
-		if (err.message.includes('CredentialsSignin')) {
-			return { error: 'Invalid username or password' };
+		if (err instanceof Error) {
+			console.log(err.message);
+
+			if (err.message.includes('CredentialsSignin')) {
+				return { error: 'Invalid username or password' };
+			}
+		} else {
+			// `err` bir `Error` nesnesi değilse, farklı bir şekilde ele alınabilir.
+			console.log('An unexpected error occurred:', err);
 		}
 		throw err;
 	}
