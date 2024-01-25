@@ -1,3 +1,6 @@
+import { Session } from 'next-auth';
+import { NextRequest } from 'next/server';
+
 export const authConfig = {
 	pages: {
 		signIn: '/login',
@@ -19,7 +22,13 @@ export const authConfig = {
 			}
 			return session;
 		},
-		authorized({ auth, request }) {
+		authorized({
+			auth,
+			request,
+		}: {
+			auth: { user: Session['user'] & { isAdmin?: boolean } };
+			request: NextRequest;
+		}) {
 			const user = auth?.user;
 			const isOnAdminPanel = request.nextUrl?.pathname.startsWith('/admin');
 			const isOnBlogPage = request.nextUrl?.pathname.startsWith('/blog');
