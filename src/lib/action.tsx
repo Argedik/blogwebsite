@@ -95,6 +95,7 @@ export const handleLogout = async () => {
 };
 
 export const register = async (_prevState: any, formData: FormData) => {
+	debugger;
 	const { username, email, password, img, passwordRepeat } =
 		Object.fromEntries(formData);
 
