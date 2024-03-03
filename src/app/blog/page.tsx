@@ -18,7 +18,7 @@ const getData = async (): Promise<Post[]> => {
 	if (!res.ok) {
 		throw new Error('Something went wrong');
 	}
-
+	console.log('object');
 	return res.json();
 };
 
